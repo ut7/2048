@@ -49,6 +49,19 @@ KeyboardInputManager.prototype.listen = function () {
     65: 3  // A
   };
 
+  var plex = new Plexer(function (key) {
+      var mapped = map[key];
+      if (mapped !== undefined) {
+        self.emit("move", mapped);
+      }
+  });
+
+  setInterval(plex.trigger.bind(plex), 100);
+
+  document.addEventListener("keyup", function (event) {
+    plex.keyUp(event.which);
+  });
+    
   // Respond to direction keys
   document.addEventListener("keydown", function (event) {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
@@ -59,10 +72,7 @@ KeyboardInputManager.prototype.listen = function () {
     }
 
     if (!modifiers) {
-      var mapped = map[event.which];
-      if (mapped !== undefined) {
-        self.emit("move", mapped);
-      }
+      plex.keyDown(event.which);
     }
 
     // R key restarts the game
