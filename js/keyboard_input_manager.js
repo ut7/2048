@@ -54,10 +54,13 @@ KeyboardInputManager.prototype.listen = function () {
     var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
                     event.shiftKey;
 
+    if (map[event.which] !== undefined) {
+      event.preventDefault();
+    }
+
     if (!modifiers) {
       var mapped = map[event.which];
       if (mapped !== undefined) {
-        event.preventDefault();
         self.emit("move", mapped);
       }
     }
